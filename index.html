@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Price Aggregator</title>
+  </head>
+  <body background="media/background.jpg" onload="document.body.style.opacity='1'" style="text-align: center">
+    <!--navbar-->
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Price Aggregator</a>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home <span class="sr-only">(current)</span></a></li>
+              <li><a href="/topSearches">Top Searches <span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <!--navbar end-->
+    <div class="container">
+      <div class="page-header">
+        <h1 style="font-weight:bold;">Price Aggregator</h1>
+      </div>
+      <div style="padding:25px">
+        <p style="font-size:22px;"></p>
+        <div style="text-align:center">
+          <div class="input-group" style="max-width:700px;text-align:center;margin:0px auto;" action="/myaction" method="post">
+            <input id = "input" name="input" class="form-control input-lg" placeholder="Search for a product to find its best price!" onkeypress="checkIfMessage(event)">
+            <div class="input-group-btn">
+              <button onclick="search()" id = "select" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="results"></div>
+      <br>
+      <div>
+        <p>This site is maintained by <a href="https://github.com/the-log">Ankur Mishra</a> and Cameron Mukerjee.</p>
+      </div>
+    </div>
+    <script>
+      var io = io().connect();
+      function checkIfMessage(e){
+        if(e.keyCode == 13){
+          search();
+        }
+      }
+      function search() {
+        query = document.getElementById("input").value;
+        console.log(query);
+        io.emit("sendQuery", {query:query});
+      }
+      var resultsDiv = document.getElementById("results");
+
+      io.on("productMap", function(data){
+        $("#results").fadeIn(1000).fadeOut(1000).fadeIn(1000);
+        console.log(data.pm);
+        var pm = data.pm
+        resultsDiv.innerHTML = "";
+        Object.keys(pm).forEach(function(key) {
+            value = pm[key];
+            // console.log(key + ": [" + value + "]");
+            if (value[1] != "http://img.shoppingshadow.com/jfe/bb/common/spacer.gif" && (value[1] != null)) {
+              console.log(value[1]);
+              var a = document.createElement('a');
+              var d1 = document.createElement('div');
+
+              d1.className = "jumbotron row";
+              d1.style.backgroundColor = "white";
+              var d2 = document.createElement('div');
+              d2.className = "col-sm-6"
+
+              var i1 = document.createElement('img')
+              i1.src = value[1]
+              i1.width = "200";
+              d2.appendChild(i1);
+              d1.appendChild(d2);
+
+              var d3 = document.createElement('div');
+              d3.className = "col-sm-6"
+
+              var p = document.createElement("a");
+              var pt = document.createTextNode(key);
+              p.style.fontSize = "20px";
+              p.appendChild(pt);
+              d3.appendChild(p);
+              var br = document.createElement("br");
+              d3.appendChild(br);
+
+              if(value[0] != null && value[0]!='NaN'){
+                var i0 = document.createElement("a");
+                i0.style.fontSize = "20px";
+
+                s = value[0]
+                if(!s.startsWith("$"))
+                  s = "$" + s
+                var t0 = document.createTextNode(s);
+                i0.appendChild(t0);
+              }
+              else{
+                var i0 = document.createElement("p");
+                var t0 = document.createTextNode("Not Available.");
+                i0.appendChild(t0);
+              }
+              d3.appendChild(i0);
+              d1.appendChild(d3);
+              key = key.replace("&", " and ");
+              var ref = "/product?" + "product=" + key + "&price=" + value[0] + "&imgSrc=" + value[1]
+              a.href = ref;
+              a.appendChild(d1);
+              resultsDiv.appendChild(a);
+
+              // $.ajax({
+              //     url: 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyD_yM5-vnZiUN5suTCI7_dchG3lgPXeSJ8',
+              //     type: 'POST',
+              //     contentType: 'application/json; charset=utf-8',
+              //     data: '{ longUrl:"'+ value[2]+'"}',
+              //     // async: false,
+              //     success: function(response) {
+              //       // console.log(value[1]);
+              //       ref =  ref + response.id;
+              //     }
+              //  })
+              // .done(function(res) {
+              //     // console.log("success");
+              //     a.href = ref;
+              //     a.appendChild(d1);
+              //     resultsDiv.appendChild(a);
+              // })
+            }
+        });
+      });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+</body>
+</html>

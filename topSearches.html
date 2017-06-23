@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Price Aggregator</title>
+  </head>
+  <body background="media/background.jpg" onload="document.body.style.opacity='1'" style="text-align: center">
+    <!--navbar-->
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Price Aggregator</a>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="/">Home <span class="sr-only">(current)</span></a></li>
+              <li><a href="/topSearches">Top Searches <span class="sr-only">(current)</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <!--navbar end-->
+    <div class="container">
+      <div class="page-header">
+        <h1 style="font-weight:bold;">Price Aggregator</h1>
+      </div>
+      <h3>Top Searches</h3>
+      <div id="topSearches"></div>
+      <br>
+      <br>
+      <div>
+        <p>This site is maintained by <a href="https://github.com/the-log">Ankur Mishra</a> and Cameron Mukerjee.</p>
+      </div>
+    </div>
+    <script>
+      var io = io().connect();
+      var topSearchesDiv = document.getElementById("topSearches");
+      io.on("connection", function(data){
+        topSearchesDiv.innerHTML = "";
+        var topSearches = data.freqMap;
+        var sortable = [];
+        for (var i in topSearches) {
+            sortable.push([i, topSearches[i]]);
+        }
+        sortable.sort(function(a, b) {
+            return b[1] - a[1];
+        });
+        console.log(sortable);
+        for(var i = 0; i < sortable.length ; i++){
+          if(i < 10){
+            var productNameH3 = document.createElement('p');
+            console.log(i);
+            var productNameText = document.createTextNode(sortable[i][0] +": "+sortable[i][1]);
+            productNameH3.style.fontSize = "20px";
+            productNameH3.appendChild(productNameText);
+            topSearchesDiv.appendChild(productNameH3);
+          }
+        }
+      });
+      io.on("updateFreq", function(data){
+        topSearchesDiv.innerHTML = "";
+        var topSearches = data.freqMap;
+        var sortable = [];
+        for (var i in topSearches) {
+            sortable.push([i, topSearches[i]]);
+        }
+        sortable.sort(function(a, b) {
+            return b[1] - a[1];
+        });
+        console.log(sortable);
+        for(var i = 0; i < sortable.length ; i++){
+          if(i < 10){
+            var productNameH3 = document.createElement('p');
+            console.log(i);
+            var productNameText = document.createTextNode(sortable[i][0] +": "+sortable[i][1]);
+            productNameH3.style.fontSize = "20px";
+            productNameH3.appendChild(productNameText);
+            topSearchesDiv.appendChild(productNameH3);
+          }
+        }
+      })
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+</body>
+</html>
