@@ -25,10 +25,9 @@ app.get('/product', function(req, res) {
 app.get('/topSearches', function(req, res) {
   res.sendFile(__dirname + '/topSearches.html');
 });
-
-app.listen(app.get('port'), function() {
-  console.log("Hosted on http://localhost:" + app.get('port'));
-});
+http.listen((process.env.PORT || 5000) , function(){
+  console.log("Server started.");
+})
 
 var productMap = {};
 var freqMap = {};
