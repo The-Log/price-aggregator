@@ -1,5 +1,5 @@
 {
-  "name": "Price Aggregator",
+  "name": "price-aggregator",
   "version": "0.0.1",
   "description": "Aggregates Prices of Products",
   "engines": {
