@@ -1,9 +1,9 @@
 {
-  "name": "node-js-getting-started",
+  "name": "Price Aggregator",
   "version": "0.0.1",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Aggregates Prices of Products",
   "engines": {
-    "node": "5.9.1"
+    "node": "7.2.1"
   },
   "main": "app.js",
   "scripts": {
@@ -20,6 +20,10 @@
     "images-scraper":"2.0.11",
     "path":"0.12.7"
 
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Log/price-aggregator"
   },
   "keywords": [
     "node",
