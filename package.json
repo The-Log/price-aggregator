@@ -10,16 +10,15 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "cheerio": "^0.22.0",
     "express": "4.13.3",
     "http": "0.0.0",
-    "socket.io": "2.0.1",
-    "walmart" : "0.0.3",
-    "cheerio": "0.22.0",
-    "request":"2.81.0",
-    "sqlite3":"3.1.8",
-    "images-scraper":"2.0.11",
-    "path":"0.12.7"
-
+    "images-scraper": "^2.0.11",
+    "path": "0.12.7",
+    "request": "2.81.0",
+    "socket.io": "^2.0.1",
+    "sqlite3": "^3.1.8",
+    "walmart": "0.0.3"
   },
   "repository": {
     "type": "git",
